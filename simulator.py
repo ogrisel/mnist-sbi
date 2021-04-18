@@ -52,6 +52,7 @@ ax.set(
 )
 
 # %%
+# digit 8 coordinates:
 points = np.asarray([
     [7, 22],
     [20, 10],
@@ -71,11 +72,12 @@ extra_n = points[:-1] - raw_controls_n + points[:-1]
 controls_p = (raw_controls_p[:-1] + extra_n[1:]) / 2
 controls_n = (raw_controls_n[1:] + extra_p[:-1]) / 2
 
-_, ax = plt.subplots(figsize=(8, 8))
-ax.set(xlim=(0, 28), ylim=(0, 28))
+fig, ax = plt.subplots(figsize=(8, 8))
+ax.set(xlim=(0, 27), ylim=(0, 27))
 ax.plot(points[:, 0], points[:, 1], "-")
 ax.scatter(controls_p[:, 0], controls_p[:, 1], color="green")
 ax.scatter(controls_n[:, 0], controls_n[:, 1], color="red")
+# plt.savefig("images/digit_8_cubic_bezier_control_points.png")
 
 
 # %%
@@ -110,11 +112,12 @@ def bezier3_path(points, alpha=0.3):
     return segments
 
 
-_, ax = plt.subplots(figsize=(8, 8))
-ax.set(xlim=(0, 28), ylim=(0, 28))
+fig, ax = plt.subplots(figsize=(8, 8))
+ax.set(xlim=(0, 27), ylim=(0, 27))
 for segment_controls in bezier3_path(points):
     segment = strike3(segment_controls, power=1., n_steps=20)
     ax.plot(segment[:, 0], segment[:, 1], 'o')
+# plt.savefig("images/digit_8_cubic_bezier_path_segments.png")
 
 
 # %%
@@ -122,8 +125,8 @@ curve = np.concatenate([
     strike3(c, power=1., n_steps=30)
     for c in bezier3_path(points)
 ])
-_, ax = plt.subplots(figsize=(8, 8))
-ax.set(xlim=(0, 28), ylim=(0, 28))
+fig, ax = plt.subplots(figsize=(8, 8))
+ax.set(xlim=(0, 27), ylim=(0, 27))
 ax.plot(curve[:, 0], curve[:, 1], 'o')
 
 
@@ -145,8 +148,9 @@ def raster(points, grid_shape=(28, 28), width=.5, saturation=.5,
 
 
 canvas = raster(points)
-_, ax = plt.subplots(figsize=(8, 8))
-ax.set(xlim=(0, 28), ylim=(0, 28))
+fig, ax = plt.subplots(figsize=(8, 8))
+ax.set(xlim=(0, 27), ylim=(0, 27))
 ax.imshow(canvas, interpolation="nearest", cmap=plt.cm.Greys_r)
+# plt.savefig("images/digit_8_rasterized.png")
 
 # %%
