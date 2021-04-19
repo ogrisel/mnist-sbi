@@ -1,0 +1,20 @@
+[build-system]
+requires = ["flit"]
+build-backend = "flit.buildapi"
+
+[tool.flit.metadata]
+module = "mnistsbi"
+author = "Olivier Grisel"
+author-email = "olivier.grisel@ensta.org"
+home-page = "https://github.com/ogrisel/mnist-sbi"
+description-file = "README.md"
+requires-python = ">=3.7"
+license = "BSD-3-Clause"
+classifiers = [
+    "Intended Audience :: Developers",
+    "License :: OSI Approved :: MIT License",
+    "Programming Language :: Python :: 3",
+    "Programming Language :: Python :: 3.7",
+    "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
+]
