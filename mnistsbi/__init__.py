@@ -1,1 +1,1 @@
-Simulation Based Inference on the MNIST data
+"""Simulation Based Inference on the MNIST data"""
