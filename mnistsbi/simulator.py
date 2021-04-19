@@ -63,6 +63,25 @@ points = np.asarray([
     [10, 23],
     [7.5, 22],
 ])
+
+points = np.asarray([
+    [14, 13],
+    [8, 17],
+    [12, 23],
+    [19, 18],
+    [10, 10],
+    [8, 5],
+    [13, 3],
+    [19, 6],
+    [14, 13],
+])
+
+points = np.asarray([
+    [11, 19],
+    [20, 20],
+    [20, 20],
+    [8, 4],
+])
 raw_controls_p = 0.25 * points[:-1] + 0.75 * points[1:]
 raw_controls_n = 0.75 * points[:-1] + 0.25 * points[1:]
 
@@ -121,17 +140,7 @@ for segment_controls in bezier3_path(points):
 
 
 # %%
-curve = np.concatenate([
-    strike3(c, power=1., n_steps=30)
-    for c in bezier3_path(points)
-])
-fig, ax = plt.subplots(figsize=(8, 8))
-ax.set(xlim=(0, 27), ylim=(0, 27))
-ax.plot(curve[:, 0], curve[:, 1], 'o')
-
-
-# %%
-def raster(points, grid_shape=(28, 28), width=.5, saturation=.5,
+def raster(points, grid_shape=(28, 28), width=.4, saturation=.8,
            n_steps_per_segment=25):
     curve = np.concatenate([
         strike3(c, power=1., n_steps=n_steps_per_segment)
