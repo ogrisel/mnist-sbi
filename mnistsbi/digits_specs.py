@@ -1,7 +1,7 @@
 import numpy as np
 
 
-DIGITS_8A_PATH = np.asarray([
+DIGITS_8A_PATH_COORDS = np.asarray([
     [7, 22],
     [20, 10],
     [20, 5],
@@ -12,7 +12,7 @@ DIGITS_8A_PATH = np.asarray([
     [7.5, 22],
 ])
 
-DIGITS_8B_PATH = np.asarray([
+DIGITS_8B_PATH_COORDS = np.asarray([
     [14, 13],
     [8, 17],
     [12, 23],
@@ -25,7 +25,7 @@ DIGITS_8B_PATH = np.asarray([
 ])
 
 
-DIGITS_7A_PATH = np.asarray([
+DIGITS_7A_PATH_COORDS = np.asarray([
     [11, 19],
     [20, 20],
     [20, 20],
