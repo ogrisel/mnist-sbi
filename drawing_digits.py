@@ -3,6 +3,7 @@
 %autoreload 2
 import numpy as np
 import matplotlib.pyplot as plt
+from mnistsbi import simulator
 
 from mnistsbi.simulator import s_shape
 from mnistsbi.simulator import strike3
@@ -110,13 +111,38 @@ def strike_params_to_path_coords(strike_params):
 # %%
 strike_params = path_coords_to_strike_params(points)
 points_reco = strike_params_to_path_coords(strike_params)
-np.testing.assert_allclose(points_reco, points)
+np.testing.assert_allclose(points_reco, points, rtol=1e-5)
+
+
 # %%
-strike_params = path_coords_to_strike_params(points)
-strike_params[0, :] = [20, 20]
-strike_params[1, 0] *= 1.0
-strike_params[1:, 1] -= 0.5 * np.pi
-points_perturbed = strike_params_to_path_coords(strike_params)
+def apply_noise(spec):
+    strike_params = path_coords_to_strike_params(points)
+    strike_params[0, :] += np.random.randn(2)
+    scales = np.random.uniform(
+        size=strike_params[1:, 0].shape,
+        low=0.8, high=1.1,
+    )
+    strike_params[1:, 0] *= scales
+    angle_noise = np.random.randn(len(points) - 1)
+    angle_noise -= angle_noise.mean()
+    strike_params[1:, 1] += 0.02 * np.pi * angle_noise
+    strike_params[1:, 1] += 0.05 * np.pi * np.random.randn(1)
+    points_perturbed = strike_params_to_path_coords(strike_params)
+    points_perturbed += 14 - points_perturbed.mean(axis=0)
+    return points_perturbed
+
+
+points_perturbed = apply_noise(points)
+fig, (ax0, ax1) = plt.subplots(ncols=2, figsize=(12, 6))
+ax0.set(xlim=(0, 27), ylim=(0, 27))
+ax0.imshow(raster(points), interpolation="nearest", cmap=plt.cm.Greys_r)
+
+ax1.set(xlim=(0, 27), ylim=(0, 27))
+ax1.imshow(raster(points_perturbed), interpolation="nearest",
+           cmap=plt.cm.Greys_r)
+# %%
+points_perturbed = points.copy()
+points_perturbed += 0.9 * np.random.normal(size=points.shape)
 
 fig, (ax0, ax1) = plt.subplots(ncols=2, figsize=(12, 6))
 ax0.set(xlim=(0, 27), ylim=(0, 27))
@@ -125,4 +151,33 @@ ax0.imshow(raster(points), interpolation="nearest", cmap=plt.cm.Greys_r)
 ax1.set(xlim=(0, 27), ylim=(0, 27))
 ax1.imshow(raster(points_perturbed), interpolation="nearest",
            cmap=plt.cm.Greys_r)
+
+
+# %%
+from time import perf_counter
+
+
+def simulate():
+    return raster(apply_noise(digits_specs.DIGITS_8A_PATH_COORDS))
+
+
+n_simulations = 500
+tic = perf_counter()
+for i in range(n_simulations):
+    simulate()
+toc = perf_counter()
+
+print(f"{n_simulations / (toc - tic):.1f} simulations per second")
+
+
+# %%
+from joblib import Parallel, delayed
+
+n_simulations = 1000
+tic = perf_counter()
+Parallel(n_jobs=4)(
+    delayed(simulate)() for i in range(n_simulations))
+toc = perf_counter()
+
+print(f"{n_simulations / (toc - tic):.1f} simulations per second")
 # %%
